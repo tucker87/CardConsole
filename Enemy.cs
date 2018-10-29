@@ -5,9 +5,9 @@ public class Enemy
 {
     public string Name { get; set; }
     public int Health { get; set; }
-    public List<Action<Board>> Actions { get; set; } = new List<Action<Board>>();
+    public List<Action<Game>> Actions { get; set; } = new List<Action<Game>>();
 
-    public Enemy(string name, int health, params Action<Board>[] actions)
+    public Enemy(string name, int health, params Action<Game>[] actions)
     {
         Name = name;
         Health = health;

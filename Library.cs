@@ -1,26 +1,25 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CardConsole;
 
 public static class Library
 {
-    public static Dictionary<int, Card> Cards { get; set; } = new Dictionary<int, Card>
+    public static Dictionary<string, Card> Cards { get; set; } = new Dictionary<string, Card>
     {
-        [0] = new Card("Heal 1", (b, c) => b.Player.Heal(1)),
-        [1] = new Card("Heal 2", (b, c) => b.Player.Heal(2)),
-        [2] = new Card("Attack 1", (b, c) => c.Target.Hit(1), b => Program.AskTarget())
+        ["Heal1"] = new Card("Heal 1", (b, c) => b.Player.Heal(1)),
+        ["Heal2"] = new Card("Heal 2", (b, c) => b.Player.Heal(2)),
+        ["Attack1"] = new Card("Attack 1", (b, c) => c.Target.Hit(1), g => Utility.AskTarget(g))
     };
-    public static Dictionary<int, Enemy> Enemies { get; set; } = new Dictionary<int, Enemy>
+    public static Dictionary<string, Enemy> Enemies { get; set; } = new Dictionary<string, Enemy>
     {
-        [0] = new Enemy("Slime", 2, b => b.Player.Hit(1), b => b.Player.Hit(2)),
-        [1] = new Enemy("Skeleton", 3, b => b.Player.Hit(0), b => b.Player.Hit(1)),
+        ["Slime"] = new Enemy("Slime", 2, g => g.Player.Hit(1), g => g.Player.Hit(2)),
+        ["Skeleton"] = new Enemy("Skeleton", 3, g => g.Player.Hit(0), g => g.Player.Hit(1)),
     };
 
-    public static Dictionary<int, Scene> Scenes { get; set; } = new Dictionary<int, Scene>
+    public static Dictionary<string, Scene> Scenes { get; set; } = new Dictionary<string, Scene>
     {
-        [0] = new Scene(new List<Element> {
-            new Element(10, 15, 30, 10, b => "Player", b => new List<string> {$"HP: {b.Player.Health}"}.Concat(b.Player.Hand.Cards.Select((c, i) => $"{i}. {c.Name}"))),
-            new Element(1, 1, 30, 10, b => "Enemies", b => b.Enemies.Select((e, i) => $"{i}. {e.Name} HP: {e.Health}")),
-        })
+        ["Combat"] = new CombatScene(),
+        ["Map"] = new MapScene()
     };
 }

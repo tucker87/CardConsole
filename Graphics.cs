@@ -3,23 +3,22 @@ using static System.Console;
 
 public class Graphics
 {
-    public static void Draw(Scene scene, Board board)
+    public static void Draw(Game game)
     {
         Clear();
-        foreach (var element in scene.Elements)
+        foreach (var element in game.Scene.Elements)
         {
-            element.Fill(board);
-            for (var c = 0; c < element.Height; c++)
-            {
-                Console.SetCursorPosition(element.X, element.Y + c);
-                for (var i = 0; i < element.Width; i++)
-                {
-                    Console.Write(element[c, i]);
-                }
-            }
+            element.Prepare(game);
+            element.Draw(game);
         }
 
-        Console.SetCursorPosition(0, 29);
+        DrawPrompt(game.Prompt);
+    }
+
+    public static void DrawPrompt(string prompt)
+    {
+        Console.SetCursorPosition(0, 28);
+        Console.WriteLine(prompt);
         Console.Write(">");
     }
 }

@@ -1,34 +1,47 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Console;
 
-public class Element
+public class BoxElement : Element
 {
-    public Element(int x, int y, int width, int height, Func<Board, string> title, Func<Board, IEnumerable<string>> content)
+    public BoxElement(int x, int y, int width, int height, Func<Game, string> title, Func<Game, IEnumerable<string>> content) 
+        : base(x, y)
     {
-        X = x;
-        Y = y;
         Width = width;
         Height = height;
         Text = new char[Height, Width];
         Title = title;
         Content = content;
     }
+
+    public BoxElement(int x, int y, int width, int height, Func<Game, string> title, Func<Game, string> content) 
+        :this(x, y, width, height, title, FuncList(content)){}
+
     public int Height { get; set; }
     public int Width { get; set; }
-    public int X { get; set; }
-    public int Y { get; set; }
-
+    
     public char[,] Text { get; set; }
-    public Func<Board, string> Title { get; set; }
-    public Func<Board, IEnumerable<string>> Content { get; set; }
+    public Func<Game, string> Title { get; set; }
+    public Func<Game, IEnumerable<string>> Content { get; set; }
 
-    public void Fill(Board board)
+    public override void Prepare(Game game)
     {
         FillBorder();
-        FillTitle(board);
-        FillContent(board);
+        FillTitle(game);
+        FillContent(game);
     }
+
+    public override void Draw(Game game)
+    {
+        for (var c = 0; c < Height; c++)
+        {
+            SetCursorPosition(X, Y + c);
+            for (var i = 0; i < Width; i++)
+                Console.Write(Text[c, i]);
+        }
+    }
+    
     public void FillBorder()
     {
         Text[0, 0] = '+';
@@ -49,14 +62,14 @@ public class Element
         }
     }
 
-    public void FillTitle(Board board)
+    public void FillTitle(Game game)
     {
-        AddText(Title(board), 0);
+        AddText(Title(game), 0);
     }
 
-    public void FillContent(Board board)
+    public void FillContent(Game game)
     {
-        var content = Content(board).ToList();
+        var content = Content(game).ToList();
         for (var i = 0; i < content.Count(); i++)
             AddText(content[i], i+1);
     }
@@ -71,5 +84,10 @@ public class Element
     {
         get => Text[c, r];
         set => Text[c, r] = value;
+    }
+
+    private static Func<Game, IEnumerable<string>> FuncList(Func<Game, string> stringFunc)
+    {
+        return g => new List<string>{stringFunc(g)};
     }
 }

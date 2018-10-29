@@ -1,11 +1,8 @@
+using System;
 using System.Collections.Generic;
 
-public class Scene
+public abstract class Scene
 {
-    public Scene(List<Element> elements)
-    {
-        Elements = elements;
-    }
-
-    public List<Element> Elements { get; }
+    public Action<Game> BaseAction { get; set; }
+    public List<Element> Elements { get; set; }
 }
