@@ -8,9 +8,9 @@ public static class Utility
         while (true)
         {
             if (!int.TryParse(ReadKey().KeyChar.ToString(), out int index))
-                WriteLine("Learn to type!");
+                Graphics.DrawError("Learn to type!");
             else if (index < 1 || index > list.Where(x => x != null).Count())
-                WriteLine("Number not in the list!");
+                Graphics.DrawError("Number not in the list!");
             else
                 return index - 1;
         }
