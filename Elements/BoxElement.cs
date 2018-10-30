@@ -5,25 +5,25 @@ using static System.Console;
 
 public class BoxElement : Element
 {
-    public BoxElement(int x, int y, int width, int height, Func<Game, string> title, Func<Game, IEnumerable<string>> content) 
+    public BoxElement(int x, int y, int width, int height, Func<Game, ColoredString> title, Func<Game, IEnumerable<ColoredString>> content) 
         : base(x, y)
     {
         Width = width;
         Height = height;
-        Text = new char[Height, Width];
+        Text = new ColoredChar[Height, Width];
         Title = title;
         Content = content;
     }
 
-    public BoxElement(int x, int y, int width, int height, Func<Game, string> title, Func<Game, string> content) 
+    public BoxElement(int x, int y, int width, int height, Func<Game, ColoredString> title, Func<Game, ColoredString> content) 
         :this(x, y, width, height, title, FuncList(content)){}
 
     public int Height { get; set; }
     public int Width { get; set; }
     
-    public char[,] Text { get; set; }
-    public Func<Game, string> Title { get; set; }
-    public Func<Game, IEnumerable<string>> Content { get; set; }
+    public ColoredChar[,] Text { get; set; }
+    public Func<Game, ColoredString> Title { get; set; }
+    public Func<Game, IEnumerable<ColoredString>> Content { get; set; }
 
     public override void Prepare(Game game)
     {
@@ -38,7 +38,7 @@ public class BoxElement : Element
         {
             SetCursorPosition(X, Y + c);
             for (var i = 0; i < Width; i++)
-                Console.Write(Text[c, i]);
+                Graphics.WriteColored(Text[c, i], game.Scene.ForegroundColor);
         }
     }
     
@@ -74,20 +74,20 @@ public class BoxElement : Element
             AddText(content[i], i+1);
     }
 
-    public void AddText(string text, int lineNumber)
+    public void AddText(ColoredString text, int lineNumber)
     {
         for (var i = 0; i < text.Length; i++)
             Text[lineNumber, i + 2] = text[i];
     }
 
-    public char this[int c, int r]
+    public ColoredChar this[int c, int r]
     {
         get => Text[c, r];
         set => Text[c, r] = value;
     }
 
-    private static Func<Game, IEnumerable<string>> FuncList(Func<Game, string> stringFunc)
+    private static Func<Game, IEnumerable<ColoredString>> FuncList(Func<Game, ColoredString> stringFunc)
     {
-        return g => new List<string>{stringFunc(g)};
+        return g => new List<ColoredString>{stringFunc(g)};
     }
 }

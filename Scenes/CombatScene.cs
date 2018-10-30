@@ -7,8 +7,8 @@ public class CombatScene : Scene
     public List<Enemy> Enemies { get; set; } = new List<Enemy>();
     public CombatScene()
     {
-        BaseAction = g => AskPlayCard(g);
-        Prompt = "Choose a Card:";
+        BaseAction = g => AskPlay(g);
+        Prompt = "Choose a Card: (E to end turn.)";
 
         Enemies = new List<Enemy>
         {
@@ -19,31 +19,39 @@ public class CombatScene : Scene
         Elements = new List<Element> {
             new BoxElement(1, 15, 30, 10,
             g => "Player",
-            g => new List<string> {$"HP: {g.Player.Health}"}.Concat(g.Player.Hand.Cards.Select((c, i) => $"{i+1}. {c.Name}"))),
+            g => new List<ColoredString> {$"HP: {g.Player.Health}"}.Concat(g.Player.Hand.Cards.Select((c, i) => (ColoredString)$"{i+1}. {c.Name}"))),
             new BoxElement(1, 1, 30, 10,
                 g => "Enemies",
-                g => Enemies.Select((e, i) => $"{i+1}. {e.Name} HP: {e.Health}")),
+                g => Enemies.Select((e, i) => (ColoredString)$"{i+1}. {e.Name} HP: {e.Health}")),
         };
     }
 
-    public void AskPlayCard(Game game)
+    public void AskPlay(Game game)
     {
-        var card = AskCard(game.Player.Hand.Cards);
+        var card = AskCard(game.Player.Hand.Cards, game.Scene.ForegroundColor);
 
-        card.GetTarget(game);
-        card.Effect(game, card);
+        if(card == null)
+        {
+            game.Player.Mana = 3;
+            foreach (var enemy in Enemies)
+                enemy.Actions.Random()(game);
+        }
+        else
+        {
+            card.GetTarget(game);
+            card.Effect(game, card);
 
-        if (Enemies.All(e => e.Health <= 0))
-            game.Scene = Library.Scenes["Map"];
-
-        foreach (var enemy in Enemies)
-            enemy.Actions.Random()(game);
+            if (Enemies.All(e => e.Health <= 0))
+                game.Scene = Library.Scenes["Map"];
+        }
     }
 
-    public static Card AskCard(List<Card> cards)
+    public static Card AskCard(List<Card> cards, ConsoleColor sceneForegroundColor)
     {
-        var index = Utility.GetIndex(cards);
-
-        return cards[index];
+        var index = Utility.GetIndex(cards, sceneForegroundColor, new List<char>{'e'});
+        if(index >= 0)
+            return cards[index];
+        else
+            return null;
     }
 }
