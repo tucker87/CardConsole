@@ -11,15 +11,14 @@ public static class Library
         ["Heal2"] = new Card("Heal 2", (b, c) => b.Player.Heal(2)),
         ["Attack1"] = new Card("Attack 1", (b, c) => c.Target.Hit(1), g => Utility.AskTarget(g))
     };
-    public static Dictionary<string, Enemy> Enemies { get; set; } = new Dictionary<string, Enemy>
+    public static Dictionary<string, Func<Enemy>> Enemies { get; set; } = new Dictionary<string, Func<Enemy>>
     {
-        ["Slime"] = new Enemy("Slime", 2, g => g.Player.Hit(1), g => g.Player.Hit(2)),
-        ["Skeleton"] = new Enemy("Skeleton", 3, g => g.Player.Hit(0), g => g.Player.Hit(1)),
+        ["Slime"] = () => new Enemy("Slime", 2, g => g.Player.Hit(1), g => g.Player.Hit(2)),
+        ["Skeleton"] = () => new Enemy("Skeleton", 3, g => g.Player.Hit(0), g => g.Player.Hit(1)),
     };
 
     public static Dictionary<string, Scene> Scenes { get; set; } = new Dictionary<string, Scene>
     {
-        ["Combat"] = new CombatScene(),
         ["Map"] = new MapScene()
     };
 }

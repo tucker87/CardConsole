@@ -12,13 +12,14 @@ public class Graphics
             element.Draw(game);
         }
 
-        DrawPrompt(game.Prompt);
+        DrawPrompt(game.Scene.Prompt);
     }
 
     public static void DrawPrompt(string prompt)
     {
         Console.SetCursorPosition(0, 28);
         Console.WriteLine(prompt);
-        Console.Write(">");
+        Console.Write(">                  ");
+        Console.SetCursorPosition(1, 29);
     }
 }
