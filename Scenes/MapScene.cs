@@ -28,12 +28,11 @@ public class MapScene : Scene
 
     private void Navigate(Game game)
     {
-
         Graphics.DrawPrompt($"Where would you like to go? 1. Left{(Map.CurrentLocation.OnlyOne ? "" : ", 2. Right")}");
         var index = Utility.GetIndex(Map.CurrentLocation.Children, game.Scene.ForegroundColor);
         Map.CurrentLocation = Map.CurrentLocation.Children[index];
         if(Map.CurrentLocation.Name == "E")
-            game.Scene = new CombatScene();
+            game.Scene = new CombatScene(game);
     }
 
     private void BuildMap(Location currentLocation, int depth = 0, bool? leftBranch = null, Random r = null)

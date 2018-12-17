@@ -1,6 +1,12 @@
+using System;
 using System.Collections.Generic;
 
-public class Hand
+public class Hand : CardPile
 {
-    public List<Card> Cards { get; set; } = new List<Card>();
+    public Deck Deck { get; set; }
+
+    public void DiscardAll()
+    {
+        Deck.Cards.
+    }
 }

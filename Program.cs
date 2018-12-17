@@ -11,11 +11,16 @@ namespace CardConsole
             var game = new Game();
             game.Scene = Library.Scenes["Map"];
 
-            game.Player.Hand.Cards.AddRange(new List<Card>{
+            game.Player.Deck.Cards.AddRange(new List<Card>{
                 Library.Cards["Heal1"],
                 Library.Cards["Heal2"],
                 Library.Cards["Attack1"],
+                Library.Cards["Attack1"],
+                Library.Cards["Attack1"],
+                Library.Cards["Attack1"],
             });
+
+            game.Player.Deck.Shuffle();
 
             while (true)
             {

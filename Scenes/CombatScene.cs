@@ -5,10 +5,13 @@ using System.Linq;
 public class CombatScene : Scene
 {
     public List<Enemy> Enemies { get; set; } = new List<Enemy>();
-    public CombatScene()
+    public CombatScene(Game game)
     {
         BaseAction = g => AskPlay(g);
         Prompt = "Choose a Card: (E to end turn.)";
+
+        game.Player.Hand.DiscardAll();
+        game.Player.Deck.Shuffle();
 
         Enemies = new List<Enemy>
         {
